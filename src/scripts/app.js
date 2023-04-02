@@ -11,15 +11,17 @@ let center = {
 }
 let player = new Object(center, 30, 'white', null);
 let angle = 0;
-let velocity = {
-    x: Math.cos(angle),
-    y: Math.sin(angle)
-};
-let particle = new Object(center, 5, 'gold', velocity);
+let particles = [];
 
 window.addEventListener('click', (e) => {
     angle = Math.atan2(e.clientY - center.y, e.clientX - center.x);
-    console.log(angle);
+    let velocity = {
+        x: Math.cos(angle),
+        y: Math.sin(angle)
+    };
+    let particle = new Object(center, 5, 'gold', velocity);
+    particles.push(particle);
+    
 });
 
 function animate(){
@@ -27,8 +29,10 @@ function animate(){
     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     player.draw(ctx);
-    particle.update();
-    particle.draw(ctx);
+    particles.forEach(particle => {
+        particle.update();
+        particle.draw(ctx);
+    });
 }
 
 animate();
