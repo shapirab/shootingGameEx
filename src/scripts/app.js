@@ -1,3 +1,4 @@
+import EnemyFactory from "./enemyFactory.js";
 import Object from "./object.js";
 
 const canvas = document.querySelector(".main-canvas");
@@ -51,49 +52,13 @@ function projectileOutOfBounds(projectile) {
   );
 }
 
+let enemyFactory = new EnemyFactory(canvas.width, canvas.height, center);
+
 function spawnEnemies() {
-  setInterval(enemiesFactory, 1000);
+  setInterval(() => {
+    enemies.push(enemyFactory.generateEnemy());
+  }, 1000);
 }
-
-function enemiesFactory() {
-  let enemyRadius = getEnemyRadius();
-  let enemyPosition = getEnemyPosition(enemyRadius);
-  console.log(enemyPosition);
-  let enemyAngle = Math.atan2(
-    center.y - enemyPosition.y,
-    center.x - enemyPosition.x
-  );
-  let enemyVelocity = {
-    x: Math.cos(enemyAngle),
-    y: Math.sin(enemyAngle),
-  };
-  let enemy = new Object(enemyPosition, enemyRadius, "gold", enemyVelocity);
-  enemies.push(enemy);
-}
-
-function getEnemyPosition(enemyRadius){
-  let x = 0;
-  let y = 0;
-  if(Math.random() < 0.5){
-    x = Math.random() < 0.5 ? 0 - enemyRadius : canvas.width + enemyRadius;
-    y = Math.random() * canvas.height;
-  }
-  else{
-    x = Math.random() * canvas.width;
-    y = Math.random() < 0.5 ? 0 - enemyRadius : canvas.height + enemyRadius;
-  }
-
-  return {
-    x, y
-  }
-}
-
-function getEnemyRadius(){
-  let minRadius = 5;
-  let maxRadius = 30;
-  return Math.random() * (maxRadius - minRadius) + minRadius;
-}
-
 
 function animate() {
   requestAnimationFrame(animate);
