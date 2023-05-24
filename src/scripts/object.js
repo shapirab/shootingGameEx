@@ -12,7 +12,7 @@ export default class Object {
                 y: velocity.y
             };
         }
-        
+        this.markedForDeletion = false;
     }
 
     update(){
