@@ -17,20 +17,22 @@ let enemies = [];
 
 let projectileFactory = new ProjectileFactory
                             (center, canvas.width, canvas.height);
-
 let enemyFactory = new EnemyFactory(canvas.width, canvas.height, center);
+let gameOver = false;
 
 window.addEventListener("click", (e) => {
-  generateProjectile(e);
+  if(!gameOver){
+    generateProjectile(e);   
+  }
 });
 
 function generateProjectile(e) {
   projectiles.push(projectileFactory.generateProjectile(e));
 }
 
-function removeProjectileIfOutOfBounds(projectile, index) {
+function removeProjectileIfOutOfBounds(projectile) {
   if (projectileFactory.projectileOutOfBounds(projectile)) {
-    projectiles.splice(index, 1);
+    projectile.markedForDeletion = true;
   }
 }
 
@@ -50,21 +52,30 @@ function animate() {
   requestAnimationFrame(animate);
   ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
   player.draw(ctx);
+
   enemies = enemies.filter(enemy => !enemy.markedForDeletion);
-  projectiles.forEach((projectile, projectileIndex) => {
-    removeProjectileIfOutOfBounds(projectile, projectileIndex);
+  projectiles = projectiles.filter(projectile => !projectile.markedForDeletion);
+  projectiles.forEach((projectile) => {
+    removeProjectileIfOutOfBounds(projectile);
     projectile.update();
     projectile.draw(ctx);
     enemies.forEach((enemy) => {
       if(calculateDistance(enemy.position, projectile.position) < enemy.radius + projectile.radius ){
         enemy.markedForDeletion = true;
-      }
+        projectile.markedForDeletion = true;
+      }     
     });
   });
   enemies.forEach((enemy) => {
-    enemy.update();
-    enemy.draw(ctx);
+      if(calculateDistance(enemy.position, player.position) < enemy.radius + player.radius){
+        gameOver = true;
+      }
+      if(!gameOver){
+        enemy.update();
+      }
+      enemy.draw(ctx);
   });
 }
 
