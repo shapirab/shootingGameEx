@@ -48,6 +48,25 @@ function calculateDistance(point_1, point_2){
   return Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 }
 
+function checkForHits(){
+  projectiles.forEach((projectile) => {
+    removeProjectileIfOutOfBounds(projectile);
+    projectile.update();
+    projectile.draw(ctx);
+    enemies.forEach((enemy) => {
+      if(calculateDistance(enemy.position, projectile.position) < enemy.radius + projectile.radius ){
+        if(enemy.radius > 10){
+          gsap.to(enemy, {radius: enemy.radius - 5});
+        }
+        else{
+          enemy.markedForDeletion = true;
+          projectile.markedForDeletion = true;
+        }
+      }     
+    });
+  });
+}
+
 function animate() {
   requestAnimationFrame(animate);
   ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
@@ -57,17 +76,9 @@ function animate() {
 
   enemies = enemies.filter(enemy => !enemy.markedForDeletion);
   projectiles = projectiles.filter(projectile => !projectile.markedForDeletion);
-  projectiles.forEach((projectile) => {
-    removeProjectileIfOutOfBounds(projectile);
-    projectile.update();
-    projectile.draw(ctx);
-    enemies.forEach((enemy) => {
-      if(calculateDistance(enemy.position, projectile.position) < enemy.radius + projectile.radius ){
-        enemy.markedForDeletion = true;
-        projectile.markedForDeletion = true;
-      }     
-    });
-  });
+  
+  checkForHits();
+
   enemies.forEach((enemy) => {
       if(calculateDistance(enemy.position, player.position) < enemy.radius + player.radius){
         gameOver = true;

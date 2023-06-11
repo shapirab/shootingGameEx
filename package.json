@@ -1,0 +1,19 @@
+{
+  "name": "shootinggameex",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shapirab/shootingGameEx.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shapirab/shootingGameEx/issues"
+  },
+  "homepage": "https://github.com/shapirab/shootingGameEx#readme"
+}
