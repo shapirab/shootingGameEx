@@ -1,6 +1,7 @@
 import EnemyFactory from "./enemyFactory.js";
 import Object from "./object.js";
 import ProjectileFactory from "./projectileFactory.js";
+import ExplosionParticlesFactory from "./explosionParticlesFactory.js";
 
 const canvas = document.querySelector(".main-canvas");
 canvas.width = window.innerWidth;
@@ -14,6 +15,7 @@ let center = {
 let player = new Object(center, 30, "white", null);
 let projectiles = [];
 let enemies = [];
+let exposionParticles = [];
 
 let projectileFactory = new ProjectileFactory
                             (center, canvas.width, canvas.height);
@@ -36,10 +38,29 @@ function removeProjectileIfOutOfBounds(projectile) {
   }
 }
 
+function removeEnemyIfOutOfBounds(enemy) {
+  console.log(enemies);
+  if (objectOutOfBounds(enemy)) {
+    //The reason for the bug is that the enemies begin off bounds, 
+    //and so are deleted as soon as they are created.
+    //enemy.markedForDeletion = true;
+  }
+}
+function removeParticleIfOutOfBounds(particle) {
+  if (objectOutOfBounds(particle)) {
+    particle.markedForDeletion = true;
+  }
+}
+
 function spawnEnemies() {
-  setInterval(() => {
+  //TODO: work on this!!! Enemies should stop being created when the game is over
+  let generator = setInterval(() => {   
     enemies.push(enemyFactory.generateEnemy());
+    if(gameOver){
+      clearInterval(generator);
+    }
   }, 1000);
+  
 }
 
 function calculateDistance(point_1, point_2){
@@ -52,8 +73,9 @@ function checkForHits(){
   projectiles.forEach((projectile) => {
     removeProjectileIfOutOfBounds(projectile);
     projectile.update();
-    projectile.draw(ctx);
+    projectile.draw(ctx, canvas.width, canvas.height);
     enemies.forEach((enemy) => {
+      
       if(calculateDistance(enemy.position, projectile.position) < enemy.radius + projectile.radius ){
         if(enemy.radius > 10){
           gsap.to(enemy, {radius: enemy.radius - 5});
@@ -61,10 +83,28 @@ function checkForHits(){
         else{
           enemy.markedForDeletion = true;
           projectile.markedForDeletion = true;
+          generateExplosion(enemy);                   
         }
       }     
     });
   });
+}
+
+function generateExplosion(enemy){
+  let explosionFactory = new ExplosionParticlesFactory(enemy);
+  let explosionParticlesNum = 50;
+  for(let i = 0; i < explosionParticlesNum; i++){
+    exposionParticles.push(explosionFactory.generateParticle());
+  } 
+}
+
+function objectOutOfBounds(gameObject){
+  return (
+    gameObject.position.x > canvas.width ||
+    gameObject.position.x < 0 ||
+    gameObject.position.y > canvas.height ||
+    gameObject.position.y < 0
+  );
 }
 
 function animate() {
@@ -76,10 +116,18 @@ function animate() {
 
   enemies = enemies.filter(enemy => !enemy.markedForDeletion);
   projectiles = projectiles.filter(projectile => !projectile.markedForDeletion);
+  exposionParticles = exposionParticles.filter(particle => !particle.markedForDeletion);
   
   checkForHits();
+  exposionParticles.forEach((explosionParitcle) => {
+    explosionParitcle.update();
+    explosionParitcle.draw(ctx);
+    removeParticleIfOutOfBounds(explosionParitcle);
+  });
 
   enemies.forEach((enemy) => {
+      //TODO: this is a bug. With it no enemies are drwan.
+      removeEnemyIfOutOfBounds(enemy);  
       if(calculateDistance(enemy.position, player.position) < enemy.radius + player.radius){
         gameOver = true;
       }

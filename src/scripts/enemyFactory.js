@@ -42,8 +42,17 @@ export default class EnemyFactory{
       }
       
     getEnemyRadius(){
-        let minRadius = 5;
-        let maxRadius = 30;
-        return Math.random() * (maxRadius - minRadius) + minRadius;
-      }
+      let minRadius = 5;
+      let maxRadius = 30;
+      return Math.random() * (maxRadius - minRadius) + minRadius;
+    }
+
+    enemyOutOfBounds(enemy) {
+      return (
+        enemy.position.x > this.canvasWidth ||
+        enemy.position.x < 0 ||
+        enemy.position.y > this.canvasHeight ||
+        enemy.position.y < 0
+      );
+  }
 }
