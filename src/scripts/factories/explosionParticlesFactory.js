@@ -1,4 +1,4 @@
-import Object from "./object.js";
+import Object from "../Models/object.js";
 
 export default class ExplosionParticlesFactory {
   constructor(enemy, canvasWidth, canvasHeight) {
@@ -10,7 +10,7 @@ export default class ExplosionParticlesFactory {
   generateParticle() {
     let minRadius = 2;
     let maxRadius = 5;
-   
+
     let position = {
       x: this.enemy.position.x,
       y: this.enemy.position.y,
@@ -19,11 +19,11 @@ export default class ExplosionParticlesFactory {
     let color = this.enemy.color;
     let velocity = {
       x: (Math.random() - 0.5) * 10,
-      y: (Math.random() - 0.5) * 10
+      y: (Math.random() - 0.5) * 10,
     };
     return new Object(position, radius, color, velocity);
   }
-  
+
   particleOutOfBounds(particle) {
     return (
       particle.position.x > this.canvasWidth ||
@@ -31,5 +31,5 @@ export default class ExplosionParticlesFactory {
       particle.position.y > this.canvasHeight ||
       particle.position.y < 0
     );
-}
+  }
 }

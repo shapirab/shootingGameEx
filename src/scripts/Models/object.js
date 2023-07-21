@@ -1,5 +1,6 @@
-export default class Object {
-    constructor(position, radius, color, velocity){
+export default class GameObject {
+    constructor(position, radius, color, velocity, 
+                    canvasWidth, canvasHeight){
         this.position = {
             x: position.x,
             y: position.y
@@ -12,6 +13,8 @@ export default class Object {
                 y: velocity.y
             };
         }
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
         this.markedForDeletion = false;
     }
 
