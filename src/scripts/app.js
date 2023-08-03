@@ -1,7 +1,8 @@
 import GameObject from '../scripts/Models/object.js';
 import ProjectileFactory from '../scripts/factories/projectileFactory.js';
-import ExplosionParticlesFactory from "./factories/explosionParticlesFactory.js";
+//import ExplosionParticlesFactory from "./factories/explosionParticlesFactory.js";
 import Enemy from "./Models/enemyObject.js";
+import ParticleObject from './Models/particleObject.js';
 
 const canvas = document.querySelector(".main-canvas");
 canvas.width = window.innerWidth;
@@ -15,7 +16,7 @@ let center = {
 let player = new GameObject(center, 30, "white", null);
 let projectiles = [];
 let enemies = [];
-let exposionParticles = [];
+let explosionParticles = [];
 
 let projectileFactory = new ProjectileFactory(
   center,
@@ -84,11 +85,31 @@ function checkForHits() {
 }
 
 function generateExplosion(enemy) {
-  let explosionFactory = new ExplosionParticlesFactory(enemy);
   let explosionParticlesNum = 50;
   for (let i = 0; i < explosionParticlesNum; i++) {
-    exposionParticles.push(explosionFactory.generateParticle());
+    let explosionParticle = generateParticle(enemy);
+    explosionParticles.push(explosionParticle);
   }
+}
+
+function generateParticle(enemy){
+  let minRadius = 2;
+  let maxRadius = 5;
+  let position = {
+    x: enemy.position.x,
+    y: enemy.position.y,
+  };
+  let radius = Math.random() * (maxRadius - minRadius) + minRadius;
+  let color = enemy.color;
+  let velocity = {
+    x: (Math.random() - 0.5) * 3,
+    y: (Math.random() - 0.5) * 3,
+  };
+  radius = radius;
+  color = color;
+  position = position;
+  velocity = velocity;
+  return new ParticleObject(position, radius, color, velocity, canvas.width, canvas.height);
 }
 
 function objectOutOfBounds(gameObject) {
@@ -111,16 +132,20 @@ function animate() {
   projectiles = projectiles.filter(
     (projectile) => !projectile.markedForDeletion
   );
-  exposionParticles = exposionParticles.filter(
+  explosionParticles = explosionParticles.filter(
     (particle) => !particle.markedForDeletion
   );
-  //console.log(exposionParticles);
 
   checkForHits();
-  exposionParticles.forEach((explosionParitcle) => {
-    explosionParitcle.update();
-    explosionParitcle.draw(ctx);
-    removeParticleIfOutOfBounds(explosionParitcle);
+  explosionParticles.forEach((explosionParticle, index) => {   
+    explosionParticle.update();
+    if(explosionParticle.alpha <= 0.01){
+      explosionParticles.splice(index, 1);
+    }
+    else{
+      explosionParticle.draw(ctx);
+    }
+    removeParticleIfOutOfBounds(explosionParticle);
   });
 
   enemies.forEach((enemy) => {

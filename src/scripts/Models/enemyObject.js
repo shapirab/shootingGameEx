@@ -32,9 +32,6 @@ export default class Enemy extends GameObject {
       x: Math.cos(enemyAngle),
       y: Math.sin(enemyAngle),
     };
-  
-
-
   }
 
   getEnemyRadius() {

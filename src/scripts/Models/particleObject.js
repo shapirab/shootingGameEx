@@ -1,25 +1,23 @@
 import GameObject from "./object.js";
 
-export default class ParticleObject extends GameObject{
-    constructor(alphaValue, enemy){
-        super();
-        this.alpha = alphaValue;
-        this.enemy = enemy; 
-        this.radius = this.getParticleRadius();
-    }
+export default class ParticleObject extends GameObject {  
+  
+  particleOutOfBounds(particle) {
+    return (
+      particle.position.x > this.canvasWidth ||
+      particle.position.x < 0 ||
+      particle.position.y > this.canvasHeight ||
+      particle.position.y < 0
+    );
+  }
 
-    update(){
-        super();
-        this.alpha += 0.1;
-    }
-
-    draw(ctx){
-        super(ctx);
-    }
-
-    getParticleRadius(){
-        let minRadius = 2;
-        let maxRadius = 5;
-        return Math.random() * (maxRadius - minRadius) + minRadius;
-    }
+  draw(ctx){
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.beginPath();
+    ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.restore();
+  }
 }

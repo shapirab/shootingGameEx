@@ -16,6 +16,7 @@ export default class GameObject {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
         this.markedForDeletion = false;
+        this.alpha = 1;
     }
 
     update(){
@@ -23,6 +24,7 @@ export default class GameObject {
             this.position.x += this.velocity.x;
             this.position.y += this.velocity.y;
         }
+        this.alpha -= 0.01;
     }
 
     draw(ctx){
