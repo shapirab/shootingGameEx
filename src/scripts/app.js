@@ -49,7 +49,9 @@ function removeParticleIfOutOfBounds(particle) {
 
 function spawnEnemies() {
   let generator = setInterval(() => {
-    enemies.push(new Enemy(canvas.width, canvas.height, center));
+    let enemy = new Enemy({x: 0, y: 0}, 10, 'gold', {x: 0, y: 0}, canvas.width, canvas.height);
+    enemy.initEnemyObject(center);
+    enemies.push(enemy);
     if (gameOver) {
       clearInterval(generator);
     }

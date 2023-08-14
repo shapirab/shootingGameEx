@@ -1,34 +1,19 @@
 import GameObject from "../Models/object.js";
 
 export default class Enemy extends GameObject {
-  constructor(canvasWidth, canvasHeight, center) {
-    let preliminaryPosition = {
-      x: 0,
-      y: 0
-    }
-
-    let preliminaryRadius = 50;
-
-    let preliminaryColor = "#fff";
-    let preliminaryVelocity = {
-      x: 0,
-      y: 0
-    }
-    
-    super(preliminaryPosition, preliminaryRadius, 
-      preliminaryColor, preliminaryVelocity, canvasWidth, canvasHeight);
-    
-    
+  initEnemyObject(center){
     this.position = this.getEnemyPosition();
     this.radius = this.getEnemyRadius();
     this.color = `hsl(${Math.random() * 360}, 50%, 50%)`;
-    
-    this.center = center;
+    this.velocity = this.getVelocity(center);
+  }
+
+  getVelocity(center){
     let enemyAngle = Math.atan2(
-      this.center.y - this.position.y,
-      this.center.x - this.position.x
+      center.y - this.position.y,
+      center.x - this.position.x
     );
-    this.velocity = {
+    return {
       x: Math.cos(enemyAngle),
       y: Math.sin(enemyAngle),
     };
