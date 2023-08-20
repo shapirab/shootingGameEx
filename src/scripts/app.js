@@ -5,9 +5,12 @@ import Enemy from "./Models/enemyObject.js";
 import ParticleObject from './Models/particleObject.js';
 
 const canvas = document.querySelector(".main-canvas");
+const activeScore = document.getElementById("activeScore");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 let ctx = canvas.getContext("2d");
+let score = 0;
+activeScore.innerText = score;
 
 let center = {
   x: canvas.width / 2,
@@ -80,6 +83,7 @@ function checkForHits() {
           enemy.markedForDeletion = true;
           projectile.markedForDeletion = true;
           generateExplosion(enemy);
+          score++;
         }
       }
     });
@@ -127,6 +131,7 @@ function animate() {
   requestAnimationFrame(animate);
   ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  activeScore.innerText = score;
 
   player.draw(ctx);
 

@@ -3,3 +3,11 @@ body, html{
     margin: 0;
     overflow: hidden;
 }
+
+#score{
+    position: absolute;
+    top: 3rem;
+    left: 6rem;
+    color: #fff;
+    font-size: 2.5rem;
+}
