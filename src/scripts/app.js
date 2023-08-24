@@ -6,6 +6,8 @@ import ParticleObject from './Models/particleObject.js';
 
 const canvas = document.querySelector(".main-canvas");
 const activeScore = document.getElementById("activeScore");
+const gameOverScreen = document.getElementById('gameOver');
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 let ctx = canvas.getContext("2d");
@@ -127,6 +129,15 @@ function objectOutOfBounds(gameObject) {
   );
 }
 
+function gameOverFunc(){
+  if(gameOver){
+    gameOverScreen.classList.remove('hide');
+  }
+  else{
+    gameOverScreen.classList.add('hide');
+  }
+}
+
 function animate() {
   requestAnimationFrame(animate);
   ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
@@ -164,10 +175,13 @@ function animate() {
     }
     if (!gameOver) {
       enemy.update();
-    }
+    }   
     enemy.draw(ctx);
   });
+  gameOverFunc();  
 }
 
 animate();
 spawnEnemies();
+
+
