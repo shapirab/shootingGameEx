@@ -7,6 +7,7 @@ import ParticleObject from './Models/particleObject.js';
 const canvas = document.querySelector(".main-canvas");
 const activeScore = document.getElementById("activeScore");
 const gameOverScreen = document.getElementById('gameOver');
+const start = document.getElementById('btn-start');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -35,6 +36,20 @@ window.addEventListener("click", (e) => {
     generateProjectile(e);
   }
 });
+
+start.addEventListener('click', () => {
+  init();
+});
+
+function init(){
+  projectiles = [];
+  enemies = [];
+  explosionParticles = [];
+  score = 0;
+  gameOver = false;
+  //animate();
+  spawnEnemies();
+}
 
 function generateProjectile(e) {
   projectiles.push(projectileFactory.generateProjectile(e));
